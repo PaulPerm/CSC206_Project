@@ -1,5 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Vehicles</h2>
-<p>This page will eventually show a list of vehicles.</p>
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-centered">Available Vehicles</h2>
+
+    <table class="table is-striped is-hoverable is-fullwidth mt-5">
+      <thead>
+        <tr>
+          <th>VIN</th>
+          <th>Type</th>
+          <th>Year</th>
+          <th>Manufacturer</th>
+          <th>Model</th>
+          <th>Color(s)</th>
+          <th>Sales Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1HGCM82633A123456</td>
+          <td>SUV</td>
+          <td>2019</td>
+          <td>Toyota</td>
+          <td>RAV4</td>
+          <td>White</td>
+          <td>$21,500</td>
+        </tr>
+        <tr>
+          <td>2FAFP404X1F123789</td>
+          <td>Sedan</td>
+          <td>2020</td>
+          <td>Ford</td>
+          <td>Fusion</td>
+          <td>Silver</td>
+          <td>$18,900</td>
+        </tr>
+        <tr>
+          <td>3N1AB7AP6GY123555</td>
+          <td>Coupe</td>
+          <td>2018</td>
+          <td>Nissan</td>
+          <td>Altima</td>
+          <td>Red, Black</td>
+          <td>$16,750</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 {% endblock %}

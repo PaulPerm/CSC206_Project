@@ -1,0 +1,23 @@
+
+@use "../../node_modules/bulma/bulma" with (
+  $primary: #004aad,  
+  $link: #007bff,
+  $info: #00bcd4,
+  $success: #28a745,
+  $warning: #ffc107,
+  $danger: #dc3545,
+  $family-primary: "Segoe UI",
+);
+
+
+body {
+  background-color: #f8f9fa;
+}
+
+.navbar {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+  color: #004aad;
+}

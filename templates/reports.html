@@ -1,5 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Reports</h2>
-<p>This section will show dealership reports later on.</p>
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-centered">Reports Dashboard</h2>
+    <p class="subtitle is-5 has-text-centered">Owner-only access: view dealership performance summaries.</p>
+
+    <div class="columns mt-5">
+      <div class="column">
+        <div class="box">
+          <h3 class="title is-5">Sales Productivity</h3>
+          <p>View each salesperson’s total vehicles sold, total revenue, and average sales price.</p>
+          <ul>
+            <li>John Smith — 14 vehicles sold — $312,000 total</li>
+            <li>Sarah Lee — 11 vehicles sold — $258,000 total</li>
+          </ul>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box">
+          <h3 class="title is-5">Seller History</h3>
+          <p>Analyze which sellers supplied the most vehicles and the total purchase cost.</p>
+          <ul>
+            <li>AutoHub — 9 vehicles — $154,000 total</li>
+            <li>Prime Motors — 6 vehicles — $121,500 total</li>
+          </ul>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box">
+          <h3 class="title is-5">Part Statistics</h3>
+          <p>Breakdown of part purchases by vendor, total cost, and average spend.</p>
+          <ul>
+            <li>AutoZone — 42 parts — $5,200 total</li>
+            <li>Napa Auto — 36 parts — $4,850 total</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}
