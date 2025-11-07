@@ -1,0 +1,70 @@
+/* === Geneva Auto Light Theme === */
+
+body {
+  background-color: #fafafa;
+  color: #222;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #1e1e1e;
+}
+
+/* Cards and boxes */
+.box, .card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.1s ease;
+}
+
+.box:hover, .card:hover {
+  transform: scale(1.01);
+}
+
+/* Buttons */
+.button.is-primary {
+  background-color: #4a90e2;
+  border: none;
+}
+
+.button.is-primary:hover {
+  background-color: #3c7dc8;
+}
+
+.button.is-link {
+  background-color: #5a8dee;
+}
+
+.button.is-link:hover {
+  background-color: #4472c4;
+}
+
+/* Centered text blocks */
+.has-text-centered {
+  color: #333;
+}
+
+/* Table tweaks */
+.table th {
+  background-color: #f5f5f5;
+}
+
+.table td {
+  background-color: #ffffff;
+}
+
+/* Gentle highlight for section areas */
+.section {
+  background-color: #fcfcfc;
+  border-radius: 8px;
+  padding: 2rem;
+}

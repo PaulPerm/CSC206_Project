@@ -1,5 +1,12 @@
 {% extends "base.html" %}
+{% block title %}Home - Geneva Auto{% endblock %}
 {% block content %}
-<h2>Welcome to Geneva Auto</h2>
-<p>This site helps manage vehicles, parts, and sales for a used car dealership.</p>
+<h1 class="title is-3 has-text-centered">Welcome to Geneva Auto</h1>
+<p class="has-text-centered">
+  This site helps manage vehicles, parts, and sales for a used car dealership.
+</p>
+
+<div class="has-text-centered mt-4">
+  <a class="button is-primary" href="{{ url_for('vehicles') }}">View Vehicles</a>
+</div>
 {% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">Part Statistics</h1>
+    <table class="table is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>Vendor</th>
+          <th>Total Parts Purchased</th>
+          <th>Total Spent ($)</th>
+          <th>Average Part Cost ($)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.vendor_name }}</td>
+          <td>{{ r.total_parts_purchased }}</td>
+          <td>{{ r.total_spent }}</td>
+          <td>{{ r.avg_part_cost }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="has-text-centered">No data found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

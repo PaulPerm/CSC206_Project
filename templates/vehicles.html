@@ -1,5 +1,73 @@
 {% extends "base.html" %}
+{% block title %}vehicles{% endblock %}
 {% block content %}
-<h2>Vehicles</h2>
-<p>This page will eventually show a list of vehicles.</p>
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-grey-dark">Vehicles</h1>
+
+    <form method="POST" class="box mb-5">
+      {{ form.hidden_tag() }}
+
+      <div class="columns is-multiline">
+        <div class="column is-one-quarter">
+          {{ form.vehicle_type.label(class="label") }}
+          {{ form.vehicle_type(class="input") }}
+        </div>
+        <div class="column is-one-quarter">
+          {{ form.manufacturer.label(class="label") }}
+          {{ form.manufacturer(class="input") }}
+        </div>
+        <div class="column is-one-quarter">
+          {{ form.model_year.label(class="label") }}
+          {{ form.model_year(class="input") }}
+        </div>
+        <div class="column is-one-quarter">
+          {{ form.fuel_type.label(class="label") }}
+          {{ form.fuel_type(class="input") }}
+        </div>
+        <div class="column is-one-quarter">
+          {{ form.color.label(class="label") }}
+          {{ form.color(class="input") }}
+        </div>
+      </div>
+
+      <div class="field is-grouped is-justify-content-center mt-3">
+        <div class="control">
+          {{ form.submit(class="button is-link") }}
+        </div>
+      </div>
+    </form>
+
+    <table class="table is-striped is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>VIN</th>
+          <th>Type</th>
+          <th>Year</th>
+          <th>Manufacturer</th>
+          <th>Model</th>
+          <th>Fuel</th>
+          <th>Colors</th>
+          <th>Sales Price ($)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in vehicles %}
+        <tr>
+          <td>{{ v.vin }}</td>
+          <td>{{ v.vehicle_type_name }}</td>
+          <td>{{ v.model_year }}</td>
+          <td>{{ v.manufacturer_name }}</td>
+          <td>{{ v.model_name }}</td>
+          <td>{{ v.fuel_type }}</td>
+          <td>{{ v.colors }}</td>
+          <td>{{ v.sales_price }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="has-text-centered">No vehicles found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}
