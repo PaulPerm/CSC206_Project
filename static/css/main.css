@@ -1,110 +1,50 @@
-:root {
-  --primary: #2c3e50;
-  --accent: #8e44ad;
-  --bg-light: #f5f5f5;
-  --bg-card: #ffffff;
-  --text-dark: #2d2d2d;
-  --text-light: #666666;
-  --border-light: #dcdcdc;
-}
-
 body {
-  background-color: var(--bg-light);
-  font-family: "Segoe UI", "Roboto", sans-serif;
-  color: var(--text-dark);
+  background-color: #f5f5f5;
+  font-family: sans-serif;
+  color: #222;
   margin: 0;
   padding: 0;
 }
 
-nav {
-  background-color: var(--primary);
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+.navbar {
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
 }
 
-nav h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
+.navbar-item {
+  color: #222;
 }
 
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
+.navbar-item:hover {
+  background-color: #eee;
 }
 
-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
+h1, h2, h3 {
+  color: #333;
 }
 
-nav a:hover {
-  text-decoration: underline;
-}
-
-h2 {
-  color: var(--primary);
-  border-bottom: 2px solid var(--border-light);
-  padding-bottom: 0.3rem;
-  margin-top: 1.5rem;
-}
-
-main {
-  padding: 2rem;
-  max-width: 1000px;
-  margin: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-light);
+.section {
+  padding: 1.5rem;
+  background-color: white;
   border-radius: 4px;
-  overflow: hidden;
 }
 
-th, td {
-  border-bottom: 1px solid var(--border-light);
-  padding: 0.75rem;
-  text-align: left;
+.table th {
+  background-color: #eee;
+  color: #222;
 }
 
-th {
-  background-color: var(--primary);
-  color: white;
+.table td {
+  background-color: #fff;
+  color: #222;
 }
 
-tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
-button, .button {
-  background-color: var(--primary);
+.button.is-primary {
+  background-color: #4a90e2;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-size: 1rem;
 }
 
-button:hover, .button:hover {
-  background-color: var(--accent);
-}
-
-footer {
-  text-align: center;
-  padding: 1rem 0;
-  margin-top: 3rem;
-  background-color: var(--primary);
-  color: white;
+.button.is-primary:hover {
+  background-color: #3c7dc8;
 }

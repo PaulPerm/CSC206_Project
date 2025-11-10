@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <meta charset="UTF-8">
+  <title>{% block title %}Geneva Auto{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <h1>Geneva Auto</h1>
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('vehicles') }}">Vehicles</a></li>
-                <li><a href="{{ url_for('reports') }}">Reports</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+  <nav class="navbar is-light">
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
+      <a class="navbar-item" href="{{ url_for('vehicles') }}">Vehicles</a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">Reports</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="{{ url_for('report_sales') }}">Sales Report</a>
+          <a class="navbar-item" href="{{ url_for('report_sellers') }}">Seller Report</a>
+          <a class="navbar-item" href="{{ url_for('report_parts') }}">Parts Report</a>
+        </div>
+      </div>
+
+      <a class="navbar-item" href="{{ url_for('login') }}">Login</a>
+    </div>
+  </div>
+</nav>
+
+  <div class="section">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
 </body>
 </html>

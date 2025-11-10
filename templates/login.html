@@ -1,34 +1,28 @@
 {% extends "base.html" %}
+{% block title %}Login - Geneva Auto{% endblock %}
 {% block content %}
-<section class="section">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-one-third">
-        <h2 class="title is-3 has-text-centered">Login</h2>
-        <form>
-          <div class="field">
-            <label class="label">Username</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Enter username">
-            </div>
+<div class="columns is-centered">
+  <div class="column is-one-third">
+    <div class="box">
+      <h2 class="title is-4 has-text-centered">Login</h2>
+      <form>
+        <div class="field">
+          <label class="label">Username</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter username">
           </div>
-          <div class="field">
-            <label class="label">Password</label>
-            <div class="control">
-              <input class="input" type="password" placeholder="Enter password">
-            </div>
+        </div>
+        <div class="field">
+          <label class="label">Password</label>
+          <div class="control">
+            <input class="input" type="password" placeholder="Enter password">
           </div>
-          <div class="field is-grouped is-grouped-centered mt-4">
-            <div class="control">
-              <button class="button is-primary">Login</button>
-            </div>
-            <div class="control">
-              <button class="button is-light" type="reset">Cancel</button>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="field has-text-centered">
+          <button class="button is-primary" type="submit">Login</button>
+        </div>
+      </form>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}

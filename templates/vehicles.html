@@ -1,7 +1,37 @@
 {% extends "base.html" %}
+{% block title %}Vehicles{% endblock %}
+
 {% block content %}
 <section class="section">
   <div class="container">
+
+    <h2 class="title is-3 has-text-centered">Search Vehicles</h2>
+
+    <form method="POST" class="box mb-6">
+      {{ form.hidden_tag() }}
+
+      <div class="columns is-multiline">
+        <div class="column is-one-third">
+          {{ form.vehicle_type.label }} {{ form.vehicle_type(class="input") }}
+        </div>
+        <div class="column is-one-third">
+          {{ form.manufacturer.label }} {{ form.manufacturer(class="input") }}
+        </div>
+        <div class="column is-one-third">
+          {{ form.model_year.label }} {{ form.model_year(class="input") }}
+        </div>
+        <div class="column is-one-third">
+          {{ form.fuel_type.label }} {{ form.fuel_type(class="input") }}
+        </div>
+        <div class="column is-one-third">
+          {{ form.color.label }} {{ form.color(class="input") }}
+        </div>
+        <div class="column is-full">
+          {{ form.submit(class="button is-primary") }}
+        </div>
+      </div>
+    </form>
+
     <h2 class="title is-3 has-text-centered">Available Vehicles</h2>
 
     <table class="table is-striped is-hoverable is-fullwidth mt-5">
@@ -17,36 +47,20 @@
         </tr>
       </thead>
       <tbody>
+        {% for vehicle in vehicles %}
         <tr>
-          <td>1HGCM82633A123456</td>
-          <td>SUV</td>
-          <td>2019</td>
-          <td>Toyota</td>
-          <td>RAV4</td>
-          <td>White</td>
-          <td>$21,500</td>
+          <td>{{ vehicle.vin }}</td>
+          <td>{{ vehicle.vehicle_type_name }}</td>
+          <td>{{ vehicle.model_year }}</td>
+          <td>{{ vehicle.manufacturer_name }}</td>
+          <td>{{ vehicle.model_name }}</td>
+          <td>{{ vehicle.colors }}</td>
+          <td>${{ "{:,.2f}".format(vehicle.sales_price) }}</td>
         </tr>
-        <tr>
-          <td>2FAFP404X1F123789</td>
-          <td>Sedan</td>
-          <td>2020</td>
-          <td>Ford</td>
-          <td>Fusion</td>
-          <td>Silver</td>
-          <td>$18,900</td>
-        </tr>
-        <tr>
-          <td>3N1AB7AP6GY123555</td>
-          <td>Coupe</td>
-          <td>2018</td>
-          <td>Nissan</td>
-          <td>Altima</td>
-          <td>Red, Black</td>
-          <td>$16,750</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
+
   </div>
 </section>
-
 {% endblock %}

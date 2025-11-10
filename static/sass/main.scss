@@ -1,23 +1,58 @@
 
-@use "../../node_modules/bulma/bulma" with (
-  $primary: #004aad,  
-  $link: #007bff,
-  $info: #00bcd4,
-  $success: #28a745,
-  $warning: #ffc107,
-  $danger: #dc3545,
-  $family-primary: "Segoe UI",
-);
-
+$bg-color: #f5f5f5;
+$text-color: #222;
+$primary-color: #4a90e2;
+$primary-hover: #3c7dc8;
+$table-header: #eee;
+$table-cell: #fff;
 
 body {
-  background-color: #f8f9fa;
+  background-color: $bg-color;
+  color: $text-color;
+  font-family: sans-serif;
 }
 
 .navbar {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-bottom: 1px solid #ccc;
+
+  .navbar-item {
+    color: $text-color;
+
+    &:hover {
+      background-color: lighten($bg-color, 5%);
+    }
+  }
 }
 
 h1, h2, h3 {
-  color: #004aad;
+  color: darken($text-color, 10%);
+}
+
+.button {
+  &.is-primary {
+    background-color: $primary-color;
+    border: none;
+    color: white;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+}
+
+.table {
+  th {
+    background-color: $table-header;
+  }
+
+  td {
+    background-color: $table-cell;
+  }
+}
+
+.section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 4px;
 }
