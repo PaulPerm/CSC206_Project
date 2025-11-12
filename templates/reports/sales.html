@@ -9,7 +9,7 @@
           <th>Salesperson</th>
           <th>Vehicles Sold</th>
           <th>Total Sales ($)</th>
-          <th>Average Sale ($)</th>
+          
         </tr>
       </thead>
       <tbody>
@@ -18,7 +18,7 @@
           <td>{{ r.first_name }} {{ r.last_name }}</td>
           <td>{{ r.vehicles_sold }}</td>
           <td>{{ r.total_sales_price }}</td>
-          <td>{{ r.avg_sales_price }}</td>
+          
         </tr>
         {% else %}
         <tr><td colspan="4" class="has-text-centered">No data found.</td></tr>
