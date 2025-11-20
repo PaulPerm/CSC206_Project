@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from sql_queries import vehicle_query, report_query
@@ -18,11 +18,11 @@ app.config['MYSQL_DB'] = 'csc206cars'
 mysql = MySQL(app)
 
 class VehicleFilterForm(FlaskForm):
-    vehicle_type = StringField('Type', validators=[Optional()])
-    manufacturer = StringField('Make', validators=[Optional()])
-    model_year = IntegerField('Year', validators=[Optional()])
-    fuel_type = StringField('Fuel', validators=[Optional()])
-    color = StringField('Color', validators=[Optional()])
+    vehicle_type = SelectField('Type', choices=[], validators=[Optional()])
+    manufacturer = SelectField('Make', choices=[], validators=[Optional()])
+    model_year = SelectField('Year', choices=[], validators=[Optional()])
+    fuel_type = SelectField('Fuel', choices=[], validators=[Optional()])
+    color = SelectField('Color', choices=[], validators=[Optional()])
     submit = SubmitField('Search')
 
 @app.route('/')
@@ -36,31 +36,62 @@ def vehicles():
     query = vc.VEHICLE_LIST_QUERY
     params = []
     filters = []
+    
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT vehicle_type_name FROM vehicletypes")
+    form.vehicle_type.choices = [('', 'Any')] + [(row[0], row[0]) for row in cur.fetchall()]
 
-    if form.validate_on_submit():
-        if form.vehicle_type.data:
-            filters.append("vt.vehicle_type_name LIKE %s")
-            params.append("%" + form.vehicle_type.data + "%")
+    cur.execute("SELECT manufacturer_name FROM manufacturers")
+    form.manufacturer.choices = [('', 'Any')] + [(row[0], row[0]) for row in cur.fetchall()]
 
-        if form.manufacturer.data:
-            filters.append("m.manufacturer_name LIKE %s")
-            params.append("%" + form.manufacturer.data + "%")
+    cur.execute("SELECT DISTINCT model_year FROM vehicles ORDER BY model_year DESC")
+    form.model_year.choices = [('', 'Any')] + [(row[0], row[0]) for row in cur.fetchall()]
 
-        if form.model_year.data:
-            filters.append("v.model_year = %s")
-            params.append(form.model_year.data)
+    cur.execute("SELECT DISTINCT fuel_type FROM vehicles")
+    form.fuel_type.choices = [('', 'Any')] + [(row[0], row[0]) for row in cur.fetchall()]
 
-        if form.fuel_type.data:
-            filters.append("v.fuel_type LIKE %s")
-            params.append("%" + form.fuel_type.data + "%")
+    cur.execute("""
+    SELECT DISTINCT c.color_name 
+    FROM colors c
+    JOIN vehiclecolors vc ON vc.colorID = c.colorID
+    """)
 
-        if form.color.data:
-            filters.append("c.color_name LIKE %s")
-            params.append("%" + form.color.data + "%")
+    form.color.choices = [('', 'Any')] + [(row[0], row[0]) for row in cur.fetchall()]
 
-        if len(filters) > 0:
-            where = " AND " + " AND ".join(filters)
-            query = query.replace("GROUP BY", where + " GROUP BY")
+    cur.close()
+    
+    if request.args.get("show_all") == "1":
+        query = vc.all_vehicles_list()
+        params = []  # reset params
+    else:
+        # Normal filter behavior
+        if form.validate_on_submit():
+            filters = []
+
+            if form.vehicle_type.data:
+                filters.append("vt.vehicle_type_name LIKE %s")
+                params.append("%" + form.vehicle_type.data + "%")
+
+            if form.manufacturer.data:
+                filters.append("m.manufacturer_name LIKE %s")
+                params.append("%" + form.manufacturer.data + "%")
+
+            if form.model_year.data:
+                filters.append("v.model_year = %s")
+                params.append(form.model_year.data)
+
+            if form.fuel_type.data:
+                filters.append("v.fuel_type LIKE %s")
+                params.append("%" + form.fuel_type.data + "%")
+
+            if form.color.data:
+                filters.append("c.color_name LIKE %s")
+                params.append("%" + form.color.data + "%")
+
+            if filters:
+                where = " AND " + " AND ".join(filters)
+                query = query.replace("GROUP BY", where + " GROUP BY")
+                
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute(query, tuple(params))
@@ -104,6 +135,16 @@ def report_parts():
 @app.route('/login')
 def login():
     return render_template('login.html')
-                           
+
+@app.route('/vehicles/<int:vehicle_id>')      
+def vehicle_details(vehicle_id):
+    vc = vehicle_query.Vehicles()
+    query = vc.vehicle_details()
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute(query, (vehicle_id,))
+    vehicle = cur.fetchone()
+    cur.close()
+    return render_template('vehicle_details.html', vehicle=vehicle)
+
 if __name__ == '__main__':
     app.run(debug=True)

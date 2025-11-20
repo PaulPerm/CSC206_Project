@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Vehicle Details{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+
+    <h2 class="title is-3 has-text-centered">Vehicle Details</h2>
+
+    <div class="box">
+
+      <p><strong>VIN:</strong> {{ vehicle.vin }}</p>
+      <p><strong>Type:</strong> {{ vehicle.vehicle_type_name }}</p>
+      <p><strong>Year:</strong> {{ vehicle.model_year }}</p>
+      <p><strong>Manufacturer:</strong> {{ vehicle.manufacturer_name }}</p>
+      <p><strong>Model:</strong> {{ vehicle.model_name }}</p>
+      <p><strong>Fuel Type:</strong> {{ vehicle.fuel_type }}</p>
+      <p><strong>Colors:</strong> {{ vehicle.colors }}</p>
+      <p><strong>Description:</strong> {{ vehicle.description }}</p>
+
+    </div>
+
+    <a href="{{ url_for('vehicles') }}" class="button is-light">Back to Vehicles</a>
+
+  </div>
+</section>
+{% endblock %}

@@ -27,7 +27,15 @@
           {{ form.color.label }} {{ form.color(class="input") }}
         </div>
         <div class="column is-full">
-          {{ form.submit(class="button is-primary") }}
+          {{ form.submit(class="button is-primary mr-3") }}
+          <a href="{{ url_for('vehicles') }}" class="button is-light">
+            Clear Filters
+          </a>
+        </div>
+        <div class="column is-one-third">
+          <a href="{{ url_for('vehicles', show_all=1) }}" class="button is-info mb-4">
+            Show All Vehicles
+          </a>
         </div>
       </div>
     </form>
@@ -48,7 +56,8 @@
       </thead>
       <tbody>
         {% for vehicle in vehicles %}
-        <tr>
+        <tr onclick='window.location="{{ url_for("vehicle_details", vehicle_id=vehicle.vehicleID) }}"'
+    style="cursor:pointer;">
           <td>{{ vehicle.vin }}</td>
           <td>{{ vehicle.vehicle_type_name }}</td>
           <td>{{ vehicle.model_year }}</td>
