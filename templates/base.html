@@ -5,14 +5,17 @@
   <title>{% block title %}Geneva Auto{% endblock %}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
+
 <body>
 
   <nav class="navbar is-light">
   <div class="navbar-menu">
+
     <div class="navbar-start">
       <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
       <a class="navbar-item" href="{{ url_for('vehicles') }}">Vehicles</a>
-
+      
+      {% if session.get("role") == "Owner" %}
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Reports</a>
         <div class="navbar-dropdown">
@@ -21,9 +24,30 @@
           <a class="navbar-item" href="{{ url_for('report_parts') }}">Parts Report</a>
         </div>
       </div>
-
-      <a class="navbar-item" href="{{ url_for('login') }}">Login</a>
+      {% endif %}
+      
     </div>
+
+    <div class="navbar-end">
+
+        
+        <a class="navbar-item has-text-weight-semibold" href="{{ url_for('login') }}">
+          {% if session.get('user_id') %}
+            {{ session.get('first_name') }} ({{ session.get('role') }})
+          {% else %}
+            Guest
+          {% endif %}
+        </a>
+
+        
+        {% if session.get('user_id') %}
+          <a class="navbar-item" href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a class="navbar-item" href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+
+      </div>
+
   </div>
 </nav>
 

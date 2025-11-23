@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Buy Vehicle{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 650px;">
+
+    <h1 class="title has-text-centered">Buy Vehicle</h1>
+    <h2 class="subtitle has-text-centered">Vehicle ID: {{ vehicle_id }}</h2>
+
+    <div class="box">
+
+      <h3 class="title is-5">Purchase Information</h3>
+
+      <div class="field mt-4">
+        <label class="label">Purchase Price</label>
+        <div class="control">
+          <input class="input" type="number" placeholder="e.g. 4500" disabled>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Purchase Date</label>
+        <div class="control">
+          <input class="input" type="date" disabled>
+        </div>
+      </div>
+
+      <div class="field mt-5">
+        <button class="button is-primary is-fullwidth" disabled>
+          Complete Purchase
+        </button>
+      </div>
+
+    </div>
+
+    <div class="has-text-centered mt-4">
+      <a href="{{ url_for('vehicles') }}" class="button is-light">← Back to Vehicles</a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
