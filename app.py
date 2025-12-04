@@ -166,7 +166,7 @@ def report_parts():
 
     conn = myConnect()
     cur = conn.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute(rq.parts_report())  # assumes method in report_query.py
+    cur.execute(rq.parts_report())  
     results = cur.fetchall()
     cur.close()
     conn.close()
@@ -179,7 +179,7 @@ def report_seller():
 
     conn = myConnect()
     cur = conn.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute(rq.seller_report())  # assumes method in report_query.py
+    cur.execute(rq.seller_report())  
     results = cur.fetchall()
     cur.close()
     conn.close()
