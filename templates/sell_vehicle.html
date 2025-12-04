@@ -4,46 +4,38 @@
 {% block content %}
 <section class="section">
   <div class="container" style="max-width: 650px;">
-
     <h1 class="title has-text-centered">Sell Vehicle</h1>
     <h2 class="subtitle has-text-centered">Vehicle ID: {{ vehicle_id }}</h2>
 
     <div class="box">
+      <form method="POST">
+        {{ form.hidden_tag() }}
 
-      <h3 class="title is-5">Sale Information</h3>
-
-      <div class="field mt-4">
-        <label class="label">Select Customer</label>
-        <div class="control">
-          <div class="select is-fullwidth">
-            <select disabled>
-              <option>Select Buyer</option>
-            </select>
+        <div class="field">
+          <label class="label">Select Customer</label>
+          <div class="control">
+            {{ form.customer_id(class="select is-fullwidth") }}
           </div>
         </div>
-      </div>
 
-      
-
-      <div class="field mt-4">
-        <label class="label">Sale Date</label>
-        <div class="control">
-          <input class="input" type="date" disabled>
+        <div class="field">
+          <label class="label">Date</label>
+          <div class="control">
+            {{ form.sales_date(class="input", placeholder="YYYY-MM-DD") }}
+          </div>
         </div>
-      </div>
 
-      <div class="field mt-5">
-        <button class="button is-primary is-fullwidth" disabled>
-          Complete Sale
-        </button>
-      </div>
-
+        <div class="field mt-4">
+          <div class="control">
+            {{ form.submit(class="button is-primary is-fullwidth") }}
+          </div>
+        </div>
+      </form>
     </div>
 
     <div class="has-text-centered mt-4">
       <a href="{{ url_for('vehicles') }}" class="button is-light">← Back to Vehicles</a>
     </div>
-
   </div>
 </section>
 {% endblock %}

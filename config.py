@@ -1,7 +1,9 @@
 class Config:
     SECRET_KEY = "csc206-session-key"
+    
+    DB_HOST = "localhost"
+    DB_USER = "geneva"
+    DB_PASSWORD = "pass123"
+    DB_NAME = "csc206cars"
 
-    MYSQL_HOST = "localhost"
-    MYSQL_USER = "root"
-    MYSQL_PASSWORD = "S4q/[CSCpaul"
-    MYSQL_DB = "csc206cars"
+

@@ -20,7 +20,7 @@
         <a class="navbar-link">Reports</a>
         <div class="navbar-dropdown">
           <a class="navbar-item" href="{{ url_for('report_sales') }}">Sales Report</a>
-          <a class="navbar-item" href="{{ url_for('report_sellers') }}">Seller Report</a>
+          <a class="navbar-item" href="{{ url_for('report_seller') }}">Seller Report</a>
           <a class="navbar-item" href="{{ url_for('report_parts') }}">Parts Report</a>
         </div>
       </div>
@@ -33,7 +33,7 @@
         
         <a class="navbar-item has-text-weight-semibold" href="{{ url_for('login') }}">
           {% if session.get('user_id') %}
-            {{ session.get('first_name') }} ({{ session.get('role') }})
+            {{ session.get('first_name') }} {{ session.get('last_name') }} ({{ session.get('role') }})
           {% else %}
             Guest
           {% endif %}

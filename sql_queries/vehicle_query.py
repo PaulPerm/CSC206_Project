@@ -12,11 +12,11 @@ class Vehicles:
         GROUP_CONCAT(c.color_name SEPARATOR ', ') AS colors,
         pt.purchase_price * 1.4 AS sales_price
     FROM vehicles v
-        JOIN purchasetransactions pt ON pt.vehicleID = v.vehicleID
-        JOIN manufacturers m ON v.manufacturerID = m.manufacturerID
-        JOIN vehicletypes vt ON v.vehicle_typeID = vt.vehicle_typeID
-        LEFT JOIN vehiclecolors vc ON vc.vehicleID = v.vehicleID
-        LEFT JOIN colors c ON vc.colorID = c.colorID
+    LEFT JOIN purchasetransactions pt ON pt.vehicleID = v.vehicleID
+    JOIN manufacturers m ON v.manufacturerID = m.manufacturerID
+    JOIN vehicletypes vt ON v.vehicle_typeID = vt.vehicle_typeID
+    LEFT JOIN vehiclecolors vc ON vc.vehicleID = v.vehicleID
+    LEFT JOIN colors c ON vc.colorID = c.colorID
     WHERE NOT EXISTS (
         SELECT 1 
         FROM salestransactions st

@@ -10,33 +10,57 @@
 
     <div class="box">
 
-      <h3 class="title is-5">Purchase Information</h3>
+      <form method="POST">
+        {{ form.hidden_tag() }}
 
-      <div class="field mt-4">
-        <label class="label">Purchase Price</label>
-        <div class="control">
-          <input class="input" type="number" placeholder="e.g. 4500" disabled>
+        <div class="field">
+          <label class="label">Customer</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              {{form.customer_id() }}
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="label">Purchase Date</label>
-        <div class="control">
-          <input class="input" type="date" disabled>
+        <div class="field">
+          <label class="label">Price</label>
+          <div class="control">
+              {{form.purchase_price(class="input") }}
+          </div>
         </div>
-      </div>
 
-      <div class="field mt-5">
-        <button class="button is-primary is-fullwidth" disabled>
-          Complete Purchase
-        </button>
-      </div>
+        <div class="field">
+          <label class="label">Purchase Date</label>
+          <div class="control">
+              {{form.purchase_date(class="input", placeholder="YYYY-MM-DD") }}
+          </div>
+        </div>
 
-    </div>
+        <div class="field">
+          <label class="label">Condition</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              {{form.vehicle_condition() }}
+            </div>
+          </div>
+        </div>
+
+        <div class="field mt-4">
+          <div class="control">
+              {{form.submit(class="button is-primary is-fullwidth") }}
+          </div>
+        </div>
+      </form>
+
+      </div>
 
     <div class="has-text-centered mt-4">
       <a href="{{ url_for('vehicles') }}" class="button is-light">← Back to Vehicles</a>
     </div>
+
+    </div>
+
+    
 
   </div>
 </section>
