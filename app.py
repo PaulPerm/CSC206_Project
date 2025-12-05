@@ -100,19 +100,19 @@ def vehicles():
         filters = []
 
         if form.vehicle_type.data:
-            filters.append("vt.vehicle_type_name = ?")
+            filters.append("vt.vehicle_type_name = %s")
             params.append(form.vehicle_type.data)
         if form.manufacturer.data:
-            filters.append("m.manufacturer_name = ?")
+            filters.append("m.manufacturer_name = %s")
             params.append(form.manufacturer.data)
         if form.model_year.data:
-            filters.append("v.model_year = ?")
+            filters.append("v.model_year = %s")
             params.append(form.model_year.data)
         if form.fuel_type.data:
-            filters.append("v.fuel_type = ?")
+            filters.append("v.fuel_type = %s")
             params.append(form.fuel_type.data)
         if form.color.data:
-            filters.append("c.color_name = ?")
+            filters.append("c.color_name = %s")
             params.append(form.color.data)
 
         if filters:
