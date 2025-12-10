@@ -3,7 +3,7 @@ from forms import LoginForm, VehicleFilterForm, BuyVehicleForm, SellVehicleForm
 from sql_queries import transaction_queries, vehicle_query, report_query
 from mydatabase import myConnect 
 from config import Config
-import MySQLdb.cursors  
+from MySQLdb.cursors import DictCursor
 
 
 app = Flask(__name__)
@@ -12,7 +12,7 @@ app.config.from_object(Config)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return redirect(url_for('vehicles'))
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -25,10 +25,11 @@ def login():
 
         conn = myConnect()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-        row = cur.fetchone()
-        columns = [col[0] for col in cur.description]
-        user = dict(zip(columns, row)) if row else None
+        cur.execute(
+            "SELECT * FROM users WHERE username = %s AND password = %s",
+            (username, password)
+        )
+        user = cur.fetchone()   
         cur.close()
         conn.close()
 
@@ -50,55 +51,56 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route('/vehicles', methods=["GET", "POST"])
+@app.route('/vehicles', methods=["GET", "POST"]) 
 def vehicles():
     vc = vehicle_query.Vehicles()
-    tq = transaction_queries.TransactionQueries()
     form = VehicleFilterForm()
 
     role = session.get("role", "Public")
     user_id = session.get("user_id")
 
-    query = vc.ALL_VEHICLES_QUERY if role == "Owner" else vc.VEHICLE_LIST_QUERY
+    if role == "Owner":
+        query = vc.ALL_VEHICLES_QUERY
+    else:
+        query = vc.SELLABLE_VEHICLES_QUERY
     params = []
 
+    
     conn = myConnect()
-    cur = conn.cursor()
+    cur = conn.cursor(DictCursor)
 
     
     form.vehicle_type.choices = [('', 'Any')]
     cur.execute("SELECT vehicle_type_name FROM vehicletypes")
-    form.vehicle_type.choices += [(r[0], r[0]) for r in cur.fetchall()]
+    form.vehicle_type.choices += [(r["vehicle_type_name"], r["vehicle_type_name"]) for r in cur.fetchall()]
 
-   
     form.manufacturer.choices = [('', 'Any')]
     cur.execute("SELECT manufacturer_name FROM manufacturers")
-    form.manufacturer.choices += [(r[0], r[0]) for r in cur.fetchall()]
+    form.manufacturer.choices += [(r["manufacturer_name"], r["manufacturer_name"]) for r in cur.fetchall()]
 
-   
     form.model_year.choices = [('', 'Any')]
     cur.execute("SELECT DISTINCT model_year FROM vehicles ORDER BY model_year DESC")
-    form.model_year.choices += [(str(r[0]), str(r[0])) for r in cur.fetchall()]
+    form.model_year.choices += [(str(r["model_year"]), str(r["model_year"])) for r in cur.fetchall()]
 
-    
     form.fuel_type.choices = [('', 'Any')]
     cur.execute("SELECT DISTINCT fuel_type FROM vehicles")
-    form.fuel_type.choices += [(r[0], r[0]) for r in cur.fetchall()]
+    form.fuel_type.choices += [(r["fuel_type"], r["fuel_type"]) for r in cur.fetchall()]
 
-    
     form.color.choices = [('', 'Any')]
     cur.execute("""
         SELECT DISTINCT c.color_name
         FROM colors c
         JOIN vehiclecolors vc ON vc.colorID = c.colorID
     """)
-    form.color.choices += [(r[0], r[0]) for r in cur.fetchall()]
+    form.color.choices += [(r["color_name"], r["color_name"]) for r in cur.fetchall()]
 
-    if request.args.get("show_all") == "1":
+   
+    filters = []
+
+    if request.args.get("show_all") == "1" and role == "Owner":
         query = vc.ALL_VEHICLES_QUERY
-    elif form.validate_on_submit():
-        filters = []
 
+    elif form.validate_on_submit():
         if form.vehicle_type.data:
             filters.append("vt.vehicle_type_name = %s")
             params.append(form.vehicle_type.data)
@@ -116,17 +118,31 @@ def vehicles():
             params.append(form.color.data)
 
         if filters:
-            where = " AND " + " AND ".join(filters)
-            query = query.replace("GROUP BY", where + " GROUP BY")
+            where_clause = " AND " + " AND ".join(filters)
 
+            if "WHERE" in query.upper():
+                if "GROUP BY" in query.upper():
+                    parts = query.split("GROUP BY")
+                    query = parts[0] + where_clause + " GROUP BY " + parts[1]
+                else:
+                    query += where_clause
+            else:
+                if "GROUP BY" in query.upper():
+                    parts = query.split("GROUP BY")
+                    query = parts[0] + " WHERE " + " AND ".join(filters) + " GROUP BY " + parts[1]
+                else:
+                    query += " WHERE " + " AND ".join(filters)
+
+    
     cur.execute(query, tuple(params))
-    rows = cur.fetchall()
-    columns = [col[0] for col in cur.description]
-    vehicles = [dict(zip(columns, row)) for row in rows]
+    vehicles = cur.fetchall()  
+
     cur.close()
     conn.close()
 
     return render_template('vehicles.html', vehicles=vehicles, form=form)
+
+
 
 
 @app.route('/vehicle/<int:vehicle_id>')
@@ -134,62 +150,88 @@ def vehicle_details(vehicle_id):
     conn = myConnect()
     cur = conn.cursor()
 
-    cur.execute("SELECT * FROM vehicles WHERE vehicleID = %s", (vehicle_id,))
-    row = cur.fetchone()
-    columns = [col[0] for col in cur.description]
-    vehicle = dict(zip(columns, row)) if row else None
+    vc = vehicle_query.Vehicles()
 
-    cur.close()
-    conn.close()
+ 
+    cur.execute(vc.vehicle_details(), (vehicle_id,))
+    vehicle = cur.fetchone()
 
     if not vehicle:
         flash("Vehicle not found", "danger")
         return redirect(url_for("vehicles"))
 
-    return render_template('vehicle_details.html', vehicle=vehicle)
+    
+    cur.execute(vc.vehicle_parts(), (vehicle_id,))
+    parts = cur.fetchall()
+
+    
+    cur.execute(vc.vehicle_seller(), (vehicle_id,))
+    seller = cur.fetchone()
+
+    
+    cur.execute(vc.vehicle_buyer(), (vehicle_id,))
+    buyer = cur.fetchone()
+
+    
+    cur.execute("SELECT 1 FROM salestransactions WHERE vehicleID = %s", (vehicle_id,))
+    is_sold = cur.fetchone() is not None
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        'vehicle_details.html',
+        vehicle=vehicle,
+        parts=parts,
+        seller=seller,
+        buyer=buyer,
+        is_sold=is_sold
+    )
 
 @app.route("/report_sales")
 def report_sales():
     rq = report_query.ReportQueries()
 
     conn = myConnect()
-    cur = conn.cursor(MySQLdb.cursors.DictCursor)  
+    cur = conn.cursor()
+    cur.execute(rq.sales_report())
     results = cur.fetchall()
     cur.close()
     conn.close()
 
-    return render_template("sales.html", results=results)
+    return render_template("reports/sales.html", results=results)
 
 @app.route("/report_parts")
 def report_parts():
     rq = report_query.ReportQueries()
 
     conn = myConnect()
-    cur = conn.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute(rq.parts_report())  
+    cur = conn.cursor()
+    cur.execute(rq.parts_report())
     results = cur.fetchall()
     cur.close()
     conn.close()
 
-    return render_template("parts.html", results=results)
+    return render_template("reports/parts.html", results=results)
 
 @app.route("/report_seller")
 def report_seller():
     rq = report_query.ReportQueries()
 
     conn = myConnect()
-    cur = conn.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute(rq.seller_report())  
+    cur = conn.cursor()
+    cur.execute(rq.seller_report())
     results = cur.fetchall()
     cur.close()
     conn.close()
 
-    return render_template("seller.html", results=results)
+    return render_template("reports/seller.html", results=results)
 
 
-@app.route("/buy/<int:vehicle_id>", methods=["GET", "POST"])
-def buy_vehicle(vehicle_id):
-    if session.get("role") not in ["Buyer", "Owner"]:
+@app.route("/buy", methods=["GET", "POST"])
+def buy_vehicle():
+   
+    if session.get("role") == "Sales":
         return redirect(url_for("login"))
 
     form = BuyVehicleForm()
@@ -198,38 +240,84 @@ def buy_vehicle(vehicle_id):
     conn = myConnect()
     cur = conn.cursor()
 
+    
     cur.execute(tq.customer_list())
-    rows = cur.fetchall()
-    columns = [col[0] for col in cur.description]
-    customers = [dict(zip(columns, row)) for row in rows]
+    customers = cur.fetchall()
+    form.customer_id.choices = [("", "Select Customer")] + [
+        (str(c["customerID"]), f"{c['first_name']} {c['last_name']}")
+        for c in customers
+    ]
 
-    choices = [("", "Select Customer")]
-    choices += [(str(c["customerID"]), f"{c['first_name']} {c['last_name']}") for c in customers]
-    form.customer_id.choices = choices
+   
+    cur.execute("SELECT manufacturerID, manufacturer_name FROM manufacturers")
+    manufacturers = cur.fetchall()
+    form.manufacturer_id.choices = [
+        (str(m["manufacturerID"]), m["manufacturer_name"])
+        for m in manufacturers
+    ]
+
+   
+    cur.execute("SELECT vehicle_typeID, vehicle_type_name FROM vehicletypes")
+    types = cur.fetchall()
+    form.vehicle_type_id.choices = [
+        (str(t["vehicle_typeID"]), t["vehicle_type_name"])
+        for t in types
+    ]
 
     if form.validate_on_submit():
-        customer_id = form.customer_id.data
-        purchase_price = form.purchase_price.data
-        purchase_date = form.purchase_date.data
-        vehicle_condition = form.vehicle_condition.data
-        user_id = session.get("user_id")
-
         try:
+           
             cur.execute(
-                tq.insert_purchase(),
-                (vehicle_id, customer_id, user_id, purchase_date, purchase_price, vehicle_condition)
+                tq.insert_vehicle(),
+                (
+                    form.vin.data,                   
+                    form.mileage.data,              
+                    form.description.data or "",     
+                    form.model_name.data,            
+                    form.model_year.data,           
+                    form.fuel_type.data,             
+                    form.manufacturer_id.data,       
+                    form.vehicle_type_id.data,       
+                )
             )
             conn.commit()
+            vehicle_id = cur.lastrowid
+
+            
+            cur.execute(
+                tq.insert_purchase(),
+                (
+                    vehicle_id,                      
+                    session.get("user_id"),          
+                    form.customer_id.data,           
+                    form.purchase_price.data,        
+                    form.purchase_date.data,         
+                    form.vehicle_condition.data,     
+                )
+            )
+            conn.commit()
+
+            flash("Purchase recorded successfully.", "success")
+
+            cur.close()
+            conn.close()
+
+            
+            return redirect(url_for("purchase_confirmation", vehicle_id=vehicle_id))
+
         except Exception as e:
-            flash(f"Error: {str(e)}", "danger")
-            return render_template("buy_vehicle.html", form=form, vehicle_id=vehicle_id)
+            conn.rollback()
+            flash(f"Error saving purchase: {e}", "danger")
 
-        cur.close()
-        conn.close()
-        return render_template("purchase_confirmation.html", vehicle_id=vehicle_id)
+    
+    cur.close()
+    conn.close()
+    return render_template("buy_vehicle.html", form=form)
 
-    return render_template("buy_vehicle.html", form=form, vehicle_id=vehicle_id)
 
+@app.route("/purchase_confirmation/<int:vehicle_id>")
+def purchase_confirmation(vehicle_id):
+    return render_template("purchase_confirmation.html", vehicle_id=vehicle_id)
 
 @app.route("/sell/<int:vehicle_id>", methods=["GET", "POST"])
 def sell_vehicle(vehicle_id):
@@ -241,13 +329,15 @@ def sell_vehicle(vehicle_id):
 
     conn = myConnect()
     cur = conn.cursor()
+    cur = conn.cursor()
     cur.execute(tq.customer_list())
-    rows = cur.fetchall()
-    columns = [col[0] for col in cur.description]
-    customers = [dict(zip(columns, row)) for row in rows]
+    customers = cur.fetchall()  
 
     choices = [("", "Select Customer")]
-    choices += [(str(c["customerID"]), f"{c['first_name']} {c['last_name']}") for c in customers]
+    choices += [
+        (str(c["customerID"]), f"{c['first_name']} {c['last_name']}")
+        for c in customers
+    ]
     form.customer_id.choices = choices
 
     if form.validate_on_submit():
@@ -264,10 +354,17 @@ def sell_vehicle(vehicle_id):
 
         cur.close()
         conn.close()
-        return redirect(url_for("vehicles"))
+        return redirect(url_for("sell_confirmation", vehicle_id=vehicle_id))
 
     return render_template("sell_vehicle.html", form=form, vehicle_id=vehicle_id)
 
+@app.route("/sell_confirmation/<int:vehicle_id>")
+def sell_confirmation(vehicle_id):
+    
+    if session.get("role") not in ["Sales", "Owner"]:
+        return redirect(url_for("login"))
+
+    return render_template("sell_confirmation.html", vehicle_id=vehicle_id)
 
 if __name__ == "__main__":
     app.run(debug=True)

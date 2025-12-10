@@ -6,18 +6,83 @@
   <div class="container" style="max-width: 650px;">
 
     <h1 class="title has-text-centered">Buy Vehicle</h1>
-    <h2 class="subtitle has-text-centered">Vehicle ID: {{ vehicle_id }}</h2>
+    
 
     <div class="box">
-
       <form method="POST">
         {{ form.hidden_tag() }}
+
+        <h2 class="title is-5">Vehicle Info</h2>
+
+        <div class="field">
+          <label class="label">VIN</label>
+          <div class="control">
+            {{ form.vin(class="input") }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Mileage</label>
+          <div class="control">
+            {{ form.mileage(class="input") }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Description</label>
+          <div class="control">
+            {{ form.description(class="input") }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Manufacturer</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              {{ form.manufacturer_id() }}
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Vehicle Type</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              {{ form.vehicle_type_id() }}
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Model Year</label>
+          <div class="control">
+            {{ form.model_year(class="input") }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Model Name</label>
+          <div class="control">
+            {{ form.model_name(class="input") }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Fuel Type</label>
+          <div class="control">
+            {{ form.fuel_type(class="input") }}
+          </div>
+        </div>
+
+        <hr>
+
+        <h2 class="title is-5">Purchase Info</h2>
 
         <div class="field">
           <label class="label">Customer</label>
           <div class="control">
             <div class="select is-fullwidth">
-              {{form.customer_id() }}
+              {{ form.customer_id() }}
             </div>
           </div>
         </div>
@@ -25,14 +90,14 @@
         <div class="field">
           <label class="label">Price</label>
           <div class="control">
-              {{form.purchase_price(class="input") }}
+            {{ form.purchase_price(class="input") }}
           </div>
         </div>
 
         <div class="field">
           <label class="label">Purchase Date</label>
           <div class="control">
-              {{form.purchase_date(class="input", placeholder="YYYY-MM-DD") }}
+            {{ form.purchase_date(class="input", placeholder="YYYY-MM-DD") }}
           </div>
         </div>
 
@@ -40,24 +105,17 @@
           <label class="label">Condition</label>
           <div class="control">
             <div class="select is-fullwidth">
-              {{form.vehicle_condition() }}
+              {{ form.vehicle_condition() }}
             </div>
           </div>
         </div>
 
         <div class="field mt-4">
           <div class="control">
-              {{form.submit(class="button is-primary is-fullwidth") }}
+            {{ form.submit(class="button is-primary is-fullwidth") }}
           </div>
         </div>
       </form>
-
-      </div>
-
-    <div class="has-text-centered mt-4">
-      <a href="{{ url_for('vehicles') }}" class="button is-light">← Back to Vehicles</a>
-    </div>
-
     </div>
 
     

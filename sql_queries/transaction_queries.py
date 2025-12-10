@@ -4,12 +4,21 @@ class TransactionQueries:
         SELECT customerID, first_name, last_name
         FROM customers
         ORDER BY last_name;
-
     """
 
+    # vehicles table has:
+    # vin, mileage, description, model_name, model_year, fuel_type, manufacturerID, vehicle_typeID
+    ADD_VEHICLE = """
+        INSERT INTO vehicles
+            (vin, mileage, description, model_name, model_year, fuel_type, manufacturerID, vehicle_typeID)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+    """
+
+    # purchasetransactions is:
+    # (purchase_transactionID, vehicleID, userID, customerID, purchase_price, purchase_date, vehicle_condition)
     ADD_PURCHASE = """
         INSERT INTO purchasetransactions
-            (vehicleID, customerID, userID, purchase_date, purchase_price, vehicle_condition)
+            (vehicleID, userID, customerID, purchase_price, purchase_date, vehicle_condition)
         VALUES (%s, %s, %s, %s, %s, %s);
     """
 
@@ -27,6 +36,9 @@ class TransactionQueries:
 
     def customer_list(self):
         return self.GET_CUSTOMERS
+
+    def insert_vehicle(self):
+        return self.ADD_VEHICLE
 
     def insert_purchase(self):
         return self.ADD_PURCHASE

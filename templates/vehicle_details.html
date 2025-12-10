@@ -8,7 +8,6 @@
     <h2 class="title is-3 has-text-centered">Vehicle Details</h2>
 
     <div class="box">
-
       <p><strong>VIN:</strong> {{ vehicle.vin }}</p>
       <p><strong>Type:</strong> {{ vehicle.vehicle_type_name }}</p>
       <p><strong>Year:</strong> {{ vehicle.model_year }}</p>
@@ -17,25 +16,28 @@
       <p><strong>Fuel Type:</strong> {{ vehicle.fuel_type }}</p>
       <p><strong>Colors:</strong> {{ vehicle.colors }}</p>
       <p><strong>Description:</strong> {{ vehicle.description }}</p>
-
     </div>
 
-    
+    {# -- SALES ROLE: Show Sell Button ONLY if not already sold -- #}
     {% if session.get('role') == 'Sales' %}
-      <div class="box has-background-light">
-        <h3 class="title is-5">Sales Options</h3>
-        <a href="{{ url_for('sell_vehicle', vehicle_id=vehicle.vehicleID) }}" class="button is-warning">
-          Sell Vehicle
-        </a>
-      </div>
+      {% if not is_sold %}
+        <div class="box has-background-light">
+          <h3 class="title is-5">Sales Options</h3>
+          <a href="{{ url_for('sell_vehicle', vehicle_id=vehicle.vehicleID) }}" class="button is-warning">
+            Sell Vehicle
+          </a>
+        </div>
+      {% else %}
+        <div class="notification is-warning is-light">
+          This vehicle has already been sold.
+        </div>
+      {% endif %}
     {% endif %}
 
-    
-    {% if session.get('role') == 'Buyer' %}
+    {# -- BUYER ROLE: Show Repair Parts if available -- #}
+    {% if session.get('role') in ['Buyer', 'Owner'] %}
       <div class="box has-background-light">
-
         <h3 class="title is-5">Repair Parts</h3>
-
         {% if parts %}
         <table class="table is-fullwidth is-striped">
           <thead>
@@ -45,7 +47,6 @@
               <th>Cost</th>
               <th>Qty</th>
               <th>Status</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +57,6 @@
               <td>${{ part.cost }}</td>
               <td>{{ part.quantity }}</td>
               <td>{{ part.status }}</td>
-              
             </tr>
             {% endfor %}
           </tbody>
@@ -64,33 +64,30 @@
         {% else %}
           <p class="has-text-grey">No parts ordered for this vehicle.</p>
         {% endif %}
-
       </div>
     {% endif %}
 
-    
+    {# -- OWNER ROLE: Show Purchase/Sale Info -- #}
     {% if session.get('role') == 'Owner' %}
       <div class="box has-background-light">
-
         <h3 class="title is-5">Owner Information</h3>
 
         {% if seller %}
-        <p><strong>Purchased From:</strong> {{ seller.first_name }} {{ seller.last_name }}</p>
-        <p><strong>Seller Phone:</strong> {{ seller.phone }}</p>
-        <p><strong>Seller Email:</strong> {{ seller.email }}</p>
+          <p><strong>Purchased From:</strong> {{ seller.first_name }} {{ seller.last_name }}</p>
+          <p><strong>Seller Phone:</strong> {{ seller.phone_number }}</p>
+          <p><strong>Seller Email:</strong> {{ seller.email_address }}</p>
         {% else %}
-        <p>No seller data recorded.</p>
+          <p>No seller data recorded.</p>
         {% endif %}
 
         {% if buyer %}
-        <hr>
-        <p><strong>Sold To:</strong> {{ buyer.first_name }} {{ buyer.last_name }}</p>
-        <p><strong>Buyer Phone:</strong> {{ buyer.phone }}</p>
-        <p><strong>Buyer Email:</strong> {{ buyer.email }}</p>
+          <hr>
+          <p><strong>Sold To:</strong> {{ buyer.first_name }} {{ buyer.last_name }}</p>
+          <p><strong>Buyer Phone:</strong> {{ buyer.phone_number }}</p>
+          <p><strong>Buyer Email:</strong> {{ buyer.email_address }}</p>
         {% else %}
-        <p>Vehicle has not been sold.</p>
+          <p>Vehicle has not been sold.</p>
         {% endif %}
-
       </div>
     {% endif %}
 

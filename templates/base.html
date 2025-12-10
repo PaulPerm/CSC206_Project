@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>{% block title %}Geneva Auto{% endblock %}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 
 <body>
@@ -12,9 +13,14 @@
   <div class="navbar-menu">
 
     <div class="navbar-start">
-      <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
       <a class="navbar-item" href="{{ url_for('vehicles') }}">Vehicles</a>
       
+      {% if session.get('role') in ["Buyer", "Owner"] %}
+        <a class="navbar-item" href="{{ url_for('buy_vehicle') }}">
+          Buy Vehicle
+        </a>
+      {% endif %}
+
       {% if session.get("role") == "Owner" %}
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Reports</a>
@@ -29,11 +35,11 @@
     </div>
 
     <div class="navbar-end">
-
+        
         
         <a class="navbar-item has-text-weight-semibold" href="{{ url_for('login') }}">
           {% if session.get('user_id') %}
-            {{ session.get('first_name') }} {{ session.get('last_name') }} ({{ session.get('role') }})
+            {{ session.get('first_name') }} {{ session.get('last_name') }} ({{ session.get('role')}})
           {% else %}
             Guest
           {% endif %}

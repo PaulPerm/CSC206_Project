@@ -33,9 +33,11 @@
           </a>
         </div>
         <div class="column is-one-third">
-          <a href="{{ url_for('vehicles', show_all=1) }}" class="button is-info mb-4">
-            Show All Vehicles
-          </a>
+          {% if session.get('role') == 'Owner' %}
+            <a href="{{ url_for('vehicles', show_all=1) }}" class="button is-info mb-4">
+              Show All Vehicles
+            </a>
+          {% endif %}
         </div>
       </div>
     </form>
@@ -53,15 +55,14 @@
           <th>Color(s)</th>
           <th>Sales Price</th>
 
-          {% if session.get('role') in ['Buyer','Owner']%}
+          {% if session.get('role') in ['Sales', 'Owner'] %}
             <th>Actions</th>
-          {%endif%}
+          {% endif %}
         </tr>
       </thead>
       <tbody>
         {% for vehicle in vehicles %}
-        <tr onclick='window.location="{{ url_for("vehicle_details", vehicle_id=vehicle.vehicleID) }}"'
-    style="cursor:pointer;">
+        <tr onclick='window.location="{{ url_for("vehicle_details", vehicle_id=vehicle["vehicleID"]) }}"'>
           <td>{{ vehicle.vin }}</td>
           <td>{{ vehicle.vehicle_type_name }}</td>
           <td>{{ vehicle.model_year }}</td>
@@ -70,11 +71,15 @@
           <td>{{ vehicle.colors }}</td>
           <td>${{ "{:,.2f}".format(vehicle.sales_price) }}</td>
 
-          {% if session.get('role') in ['Buyer', 'Owner']%}
+          {% if session.get('role') in ['Sales', 'Owner'] %}
             <td>
-              <a class="button is-small is-success" href="{{ url_for('buy_vehicle', vehicle_id=vehicle.vehicleID)}}" onclick="event.stopPropagation();">
-                Buy
-              </a>
+              {% if vehicle.is_sold == 0 %}
+                <a class="button is-small is-warning"
+                  href="{{ url_for('sell_vehicle', vehicle_id=vehicle.vehicleID) }}"
+                  onclick="event.stopPropagation();">
+                  Sell
+                </a>
+              {% endif %}
             </td>
           {% endif %}
         </tr>

@@ -1,5 +1,4 @@
-class Reports:
-
+class ReportQueries:
     SALES_PRODUCTIVITY_QUERY = '''
     SELECT 
         u.first_name,
@@ -40,8 +39,8 @@ class Reports:
     def sales_report(self):
         return self.SALES_PRODUCTIVITY_QUERY
 
-    def seller_history(self):
+    def seller_report(self):
         return self.SELLER_HISTORY_QUERY
 
-    def part_statistics(self):
+    def parts_report(self):
         return self.PART_STATISTICS_QUERY
