@@ -50,16 +50,7 @@ class Vehicles:
             v.model_name, v.model_year, pt.purchase_price, v.fuel_type;
     """
 
-    # VEHICLE_LIST_QUERY = """
-    #     SELECT v.*, m.manufacturer_name, vt.vehicle_type_name
-    #     FROM vehicles v
-    #     JOIN manufacturers m ON v.manufacturerID = m.manufacturerID
-    #     JOIN vehicletypes vt ON v.vehicle_typeID = vt.vehicle_typeID
-    #     LEFT JOIN vehiclecolors vc ON v.vehicleID = vc.vehicleID
-    #     LEFT JOIN colors c ON vc.colorID = c.colorID
-    #     WHERE v.status = 'Available'
-    #     GROUP BY v.vehicleID
-    # """
+    
 
     ALL_VEHICLES_QUERY = '''
         SELECT 
@@ -83,15 +74,7 @@ class Vehicles:
         GROUP BY v.vehicleID;
     '''
 
-    # ALL_VEHICLES_QUERY = """
-    #     SELECT v.*, m.manufacturer_name, vt.vehicle_type_name
-    #     FROM vehicles v
-    #     JOIN manufacturers m ON v.manufacturerID = m.manufacturerID
-    #     JOIN vehicletypes vt ON v.vehicle_typeID = vt.vehicle_typeID
-    #     LEFT JOIN vehiclecolors vc ON v.vehicleID = vc.vehicleID
-    #     LEFT JOIN colors c ON vc.colorID = c.colorID
-    #     GROUP BY v.vehicleID
-    # """
+    
 
     VEHICLE_DETAILS_QUERY = '''
     SELECT 

@@ -265,6 +265,14 @@ def buy_vehicle():
     ]
 
     if form.validate_on_submit():
+        cur.execute("SELECT vehicleID FROM vehicles WHERE vin = %s", (form.vin.data,))
+        existing = cur.fetchone()
+        if existing:
+            
+            form.vin.errors.append("A vehicle with this VIN already exists. Please enter a different VIN.")
+             
+            return render_template("buy_vehicle.html", form=form)
+
         try:
            
             cur.execute(
@@ -307,9 +315,11 @@ def buy_vehicle():
 
         except Exception as e:
             conn.rollback()
-            flash(f"Error saving purchase: {e}", "danger")
+            
+            print("DB ERROR IN /buy:", e)
+            
+            return render_template("buy_vehicle.html", form=form)
 
-    
     cur.close()
     conn.close()
     return render_template("buy_vehicle.html", form=form)

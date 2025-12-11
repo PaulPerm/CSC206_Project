@@ -6,16 +6,13 @@ class TransactionQueries:
         ORDER BY last_name;
     """
 
-    # vehicles table has:
-    # vin, mileage, description, model_name, model_year, fuel_type, manufacturerID, vehicle_typeID
     ADD_VEHICLE = """
         INSERT INTO vehicles
             (vin, mileage, description, model_name, model_year, fuel_type, manufacturerID, vehicle_typeID)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
 
-    # purchasetransactions is:
-    # (purchase_transactionID, vehicleID, userID, customerID, purchase_price, purchase_date, vehicle_condition)
+    
     ADD_PURCHASE = """
         INSERT INTO purchasetransactions
             (vehicleID, userID, customerID, purchase_price, purchase_date, vehicle_condition)

@@ -48,3 +48,15 @@ h1, h2, h3 {
 .button.is-primary:hover {
   background-color: #3c7dc8;
 }
+
+
+.field-error {
+    border: 2px solid #d9534f;      
+    background-color: #ffecec;       
+}
+
+.error-text {
+    color: #d9534f;
+    font-size: 0.9em;
+    margin-top: 2px;
+}
